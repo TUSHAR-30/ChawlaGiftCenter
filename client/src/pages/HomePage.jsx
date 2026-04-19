@@ -4,6 +4,7 @@ import FeaturesSection from "../components/home/FeaturesSection";
 import GallerySection from "../components/home/GallerySection";
 import HeroSection from "../components/home/HeroSection";
 import LocationSection from "../components/home/LocationSection";
+import ProductShowcaseSection from "../components/home/ProductShowcaseSection";
 import TrendingSection from "../components/home/TrendingSection";
 import ProductCardSkeleton from "../components/products/ProductCardSkeleton";
 import { fetchJson } from "../utils/api";
@@ -68,6 +69,7 @@ export default function HomePage() {
       <HeroSection />
       {isLoading ? <HomeSectionSkeleton /> : <CategoriesSection categories={homeData.categories} />}
       {isLoading ? <HomeSectionSkeleton /> : <TrendingSection products={homeData.trendingPreview} />}
+      <ProductShowcaseSection />
       {isLoading ? <HomeSectionSkeleton /> : <FeaturesSection features={homeData.features} />}
       {isLoading ? <HomeSectionSkeleton /> : <GallerySection galleryImages={homeData.gallery} />}
       <LocationSection />
