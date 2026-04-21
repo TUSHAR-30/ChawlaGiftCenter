@@ -6,7 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const getHomePageData = asyncHandler(async (req, res) => {
   const [categories, features, gallery, trendingPreview] = await Promise.all([
-    HomeCategory.find().sort({ sortOrder: 1, title: 1 }).limit(6),
+    HomeCategory.find().sort({ sortOrder: 1, title: 1 }).limit(8),
     HomeFeature.find().sort({ sortOrder: 1 }),
     HomeGalleryItem.find().sort({ sortOrder: 1 }),
     Product.find({ trending: true }).sort({ createdAt: -1 }).limit(3),
@@ -22,3 +22,4 @@ export const getHomePageData = asyncHandler(async (req, res) => {
     },
   });
 });
+

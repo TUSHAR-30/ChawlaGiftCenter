@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { MdDragIndicator } from "react-icons/md";
 import CategoryForm from "../components/admin/CategoryForm";
 import { EditModal, EmptyState, Field, Input, Status, TableWrap } from "../components/admin/AdminUi";
 import ProductForm from "../components/admin/ProductForm";
@@ -734,11 +735,11 @@ export default function AdminDashboardPage() {
                                 }}
                                 type="button"
                               >
-                                <span className="material-symbols-outlined text-lg">drag_indicator</span>
+                                <MdDragIndicator className="text-lg" />
                               </button>
                             ) : (
                               <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-surface-container text-on-surface-variant">
-                                <span className="material-symbols-outlined text-lg">drag_indicator</span>
+                                <MdDragIndicator className="text-lg" />
                               </span>
                             )}
                           </td>
@@ -783,7 +784,7 @@ export default function AdminDashboardPage() {
                 onSubmit={saveNewCategory}
                 status={categoryStatus}
                 submitLabel="Save Category"
-                subtitle="Categories here power both the homepage and the products page. Only the first 6 appear on the homepage."
+                subtitle="Categories here power both the homepage and the products page. Only the first 8 appear on the homepage."
                 title="Add Category"
               />
             </div>

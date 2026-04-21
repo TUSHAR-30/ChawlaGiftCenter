@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { MdSearch } from "react-icons/md";
 import { fetchJson } from "../utils/api";
 
 const INITIAL_VIDEOS = 6;
@@ -173,7 +174,7 @@ export default function UnboxingPage() {
               </p>
             </div>
             <label className="flex w-full max-w-xl items-center gap-3 rounded-full bg-white px-4 py-3 shadow-[0_18px_36px_-24px_rgba(31,41,55,0.3)] ring-1 ring-outline-variant lg:px-5">
-              <span className="material-symbols-outlined text-on-surface-variant">search</span>
+              <MdSearch className="text-xl text-on-surface-variant" />
               <input
                 className="w-full border-0 bg-transparent text-sm font-medium text-on-surface outline-none placeholder:text-on-surface-variant"
                 onChange={(event) => setSearchTerm(event.target.value)}

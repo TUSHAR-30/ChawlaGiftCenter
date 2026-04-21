@@ -68,8 +68,8 @@ export default function HomePage() {
     <main className="relative overflow-hidden pt-16 pb-28 lg:pt-20 lg:pb-10">
       <HeroSection />
       {isLoading ? <HomeSectionSkeleton /> : <CategoriesSection categories={homeData.categories} />}
-      {isLoading ? <HomeSectionSkeleton /> : <TrendingSection products={homeData.trendingPreview} />}
       <ProductShowcaseSection />
+      {isLoading ? <HomeSectionSkeleton /> : <TrendingSection products={homeData.trendingPreview} />}
       {isLoading ? <HomeSectionSkeleton /> : <FeaturesSection features={homeData.features} />}
       {isLoading ? <HomeSectionSkeleton /> : <GallerySection galleryImages={homeData.gallery} />}
       <LocationSection />

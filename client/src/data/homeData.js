@@ -70,17 +70,17 @@ export const homeFeatures = [
 export const homeGalleryImages = [
   {
     image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCg0pFFSBK3sOuS0cVb_kAk7wmwhhbXZ4JiRznrLYq8CLki582XmM1cTTRpqhH6pH17jW0ewpcSheMyQBtj08yMkly5NsKCB1YJbiZdO6DFm4KuPWlDGXZkJC2XXyDsO716zRbAAa1C8vvEyrnmFV-LvQ1jq-ADzD0nuDFR57lyrRYrLuVt8728n9rrOsa0rBvdT7CQ1dUo75WGJN8eDFsD-hC5UGRd5X7l4FFA5GZ8R2h8_tFPIyQOC2VCM2M62yqgdqCeq2vcPcU",
+      "shop/inside4.jpg",
     alt: "wide shot of a clean modern gift shop interior with organized wooden shelving and warm decor",
   },
   {
     image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBqlVmptv5RrKzcT2YA4gSeELsYQSmGHWcbof1T7QOkNXTxjR4dn_1nWDC_4JCmUOT_QJU02LIve9o36bsozYKrXuJf1B7L2gXN0A0k-8MHVenxfPw2hrByvtSHfJr_F1EJwWTKTEn7A2HSMW9zIlo6xz8lb9roIyR67DxrAi8L07ey0O1h1l2eQWf98nO-FeTDoguA0Q-k52k8W1TVMbl-imJsxUsA8ypIIwP7WtCHVIA3oQBQJ9wjL6f0dM0rL833I01Uzc7bRPc",
+      "shop/inside5.jpg",
     alt: "close up of beautifully arranged gift hampers and artisanal products on shop display",
   },
   {
     image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDFCQaLPQHVyVb0-xp7xUYx8uk8jbskU8X-Kb4svm-hUnryYdZSjKMAkE-t1s3IcL8-hEzX2BkyGwkqz74OrsaA-E5bAF451VykTivay4o7l_LSgKjBJ8bVjhVMV-ondoLh6eyA_3JPzVNjvr5vN7vKTSVKezwlPWWcsPjZPDQUnkQR86RqYp9KmHxg8U9XqdS_a4h4NaJzuNcCGTF8ar_e4wcxNc1-G5AJGcdr_zy1Qdju2X2UFm5hj73pyXzgvg5coyP2SD6So2A",
+      "shop/inside6.jpg",
     alt: "elegant retail store front with large glass windows and glowing atmospheric lighting at dusk",
   },
 ];

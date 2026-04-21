@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { MdClose } from "react-icons/md";
 
 export function Status({ value }) {
   if (!value.message) {
@@ -123,7 +124,7 @@ export function EditModal({ title, isOpen, onClose, children }) {
         <div className="flex items-center justify-between border-b border-outline-variant px-6 py-4 sm:px-8">
           <h2 className="font-headline text-2xl font-black tracking-tight text-on-surface">{title}</h2>
           <button className="rounded-full p-2 text-on-surface-variant transition hover:bg-surface-container" onClick={onClose} type="button">
-            <span className="material-symbols-outlined">close</span>
+            <MdClose className="text-xl" />
           </button>
         </div>
         <div className="p-6 sm:p-8">{children}</div>

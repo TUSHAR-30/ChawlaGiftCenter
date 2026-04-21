@@ -1,3 +1,4 @@
+import { MdArrowForward } from "react-icons/md";
 import { Link } from "react-router-dom";
 import ProductCard from "../products/ProductCard";
 
@@ -12,13 +13,13 @@ export default function TrendingSection({ products = [] }) {
           <p className="text-sm font-medium text-on-surface-variant">Most loved picks this week</p>
         </div>
         <Link className="flex items-center gap-1 text-sm font-bold text-primary" to="/trending">
-          View All <span className="material-symbols-outlined text-sm">arrow_forward</span>
+          View All <MdArrowForward className="text-sm" />
         </Link>
       </div>
 
-      <div className="no-scrollbar mx-auto flex max-w-7xl gap-4 overflow-x-auto px-4 pb-4 sm:gap-5 sm:px-6 lg:px-8">
+      <div className="no-scrollbar mx-auto flex max-w-7xl gap-3.5 overflow-x-auto px-4 pb-4 sm:gap-4 sm:px-6 lg:px-8">
         {products.map((product) => (
-          <div key={product.title} className="w-[78vw] max-w-xs flex-none sm:w-72 lg:w-80">
+          <div key={product.title} className="w-[72vw] max-w-[17.5rem] flex-none sm:w-64 lg:w-68 xl:w-72">
             <ProductCard product={product} />
           </div>
         ))}
