@@ -65,7 +65,11 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="relative overflow-hidden pt-16 pb-28 lg:pt-20 lg:pb-10">
+    <main className="relative overflow-hidden bg-[linear-gradient(180deg,#fffdf6_0%,#fffaf0_18%,#f8fbff_56%,#fffef9_100%)] pt-16 pb-28 lg:pt-20 lg:pb-10">
+      <div className="soft-shapes left-[-4rem] top-32 h-64 w-64 rounded-full bg-primary-container/55" />
+      <div className="soft-shapes right-[-5rem] top-[30rem] h-72 w-72 rounded-full bg-secondary-container/45" />
+      <div className="soft-shapes bottom-24 left-1/3 h-56 w-56 rounded-full bg-tertiary-container/35" />
+
       <HeroSection />
       {isLoading ? <HomeSectionSkeleton /> : <CategoriesSection categories={homeData.categories} />}
       <ProductShowcaseSection />
