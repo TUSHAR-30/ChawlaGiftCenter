@@ -5,7 +5,7 @@ const links = [
   { to: "/", icon: MdHomeFilled, label: "HOME" },
   { to: "/trending", icon: MdTrendingUp, label: "Trending" },
   { to: "/products", icon: MdInventory2, label: "Products" },
-  { to: "/unboxing", icon: MdSmartDisplay, label: "Unboxing" },
+  // { to: "/unboxing", icon: MdSmartDisplay, label: "Unboxing" },
 ];
 
 export default function BottomNav() {

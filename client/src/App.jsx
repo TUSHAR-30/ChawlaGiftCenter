@@ -45,7 +45,7 @@ export default function App() {
         <Route path="/" element={withSuspense(<HomePage />)} />
         <Route path="/trending" element={withSuspense(<TrendingPage />)} />
         <Route path="/products" element={withSuspense(<ProductsPage />)} />
-        <Route path="/unboxing" element={withSuspense(<UnboxingPage />)} />
+        {/* <Route path="/unboxing" element={withSuspense(<UnboxingPage />)} /> */}
         <Route path="/categories" element={<Navigate to="/products" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
