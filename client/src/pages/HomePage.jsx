@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import CategoriesSection from "../components/home/CategoriesSection";
 import FeaturesSection from "../components/home/FeaturesSection";
 import GallerySection from "../components/home/GallerySection";
 import HeroSection from "../components/home/HeroSection";
 import LocationSection from "../components/home/LocationSection";
-import ProductShowcaseSection from "../components/home/ProductShowcaseSection";
 import TrendingSection from "../components/home/TrendingSection";
 import ProductCardSkeleton from "../components/products/ProductCardSkeleton";
 import { fetchJson } from "../utils/api";
+
+const ProductShowcaseSection = lazy(() => import("../components/home/ProductShowcaseSection"));
 
 function HomeSectionSkeleton() {
   return (
@@ -20,6 +21,30 @@ function HomeSectionSkeleton() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, index) => (
             <ProductCardSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ShowcaseSkeleton() {
+  return (
+    <section className="relative overflow-hidden bg-[linear-gradient(180deg,rgba(255,251,235,0.68),rgba(255,255,255,0.98)_24%,rgba(239,246,255,0.72)_100%)] py-16 sm:py-18">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto mb-10 max-w-2xl text-center">
+          <div className="mx-auto mb-4 shimmer-surface h-10 w-48 rounded-full" />
+          <div className="mx-auto shimmer-surface h-10 w-80 rounded-full" />
+        </div>
+        <div className="space-y-14 sm:space-y-18 lg:space-y-22">
+          {Array.from({ length: 2 }).map((_, index) => (
+            <div key={index} className="mx-auto h-[330px] w-full max-w-6xl sm:h-[390px] md:h-[430px] lg:h-[520px]">
+              <div className="relative mx-auto h-full w-[52%] max-w-[430px]">
+                <div className="h-full rounded-[2.1rem] bg-white/80 p-3 shadow-[0_28px_80px_-38px_rgba(15,23,42,0.18)] ring-1 ring-white/70 sm:p-4">
+                  <div className="shimmer-surface h-[260px] rounded-[1.7rem] sm:h-[310px] md:h-[340px] lg:h-[430px]" />
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -70,10 +95,12 @@ export default function HomePage() {
 
       <HeroSection />
       {isLoading ? <HomeSectionSkeleton /> : <CategoriesSection categories={homeData.categories} />}
-      <ProductShowcaseSection />
+      <Suspense fallback={<ShowcaseSkeleton />}>
+        <ProductShowcaseSection />
+      </Suspense>
       {isLoading ? <HomeSectionSkeleton /> : <TrendingSection products={homeData.trendingPreview} />}
-      {isLoading ? <HomeSectionSkeleton /> : <FeaturesSection  />}
-      {isLoading ? <HomeSectionSkeleton /> : <GallerySection  />}
+      {isLoading ? <HomeSectionSkeleton /> : <FeaturesSection />}
+      {isLoading ? <HomeSectionSkeleton /> : <GallerySection />}
       <LocationSection />
     </main>
   );
