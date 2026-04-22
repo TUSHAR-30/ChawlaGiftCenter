@@ -1,4 +1,4 @@
-export const homeCategories = [
+export const categories = [
   {
     title: "Toys for Kids",
     subtitle: "Fun and educational",

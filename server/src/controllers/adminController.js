@@ -1,4 +1,4 @@
-import { HomeCategory } from "../models/HomeCategory.js";
+import { Category } from "../models/Category.js";
 import { Product } from "../models/Product.js";
 import { UnboxingVideo } from "../models/UnboxingVideo.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -75,7 +75,7 @@ export const getAdminSession = asyncHandler(async (req, res) => {
 
 export const getAdminDashboardData = asyncHandler(async (req, res) => {
   const [categories, products, unboxingVideos] = await Promise.all([
-    HomeCategory.find().sort({ sortOrder: 1, title: 1 }),
+    Category.find().sort({ sortOrder: 1, title: 1 }),
     Product.find().sort({ createdAt: -1 }),
     UnboxingVideo.find().sort({ createdAt: -1 }),
   ]);
@@ -94,18 +94,18 @@ export const createCategory = asyncHandler(async (req, res) => {
   const title = requireText(req.body.title, "Category name");
   const subtitle = optionalText(req.body.subtitle);
   const alt = requireText(req.body.alt, "Alt text");
-  const existingCategory = await HomeCategory.findOne({ title });
+  const existingCategory = await Category.findOne({ title });
 
   if (existingCategory) {
     throw new ApiError(409, "A category with this name already exists.");
   }
 
-  const lastCategory = await HomeCategory.findOne().sort({ sortOrder: -1, createdAt: -1 });
+  const lastCategory = await Category.findOne().sort({ sortOrder: -1, createdAt: -1 });
   const sortOrder = lastCategory ? lastCategory.sortOrder + 1 : 0;
 
   const uploadedImage = await uploadImageAsset(req.file, "chawla-gift-centre/categories");
 
-  const category = await HomeCategory.create({
+  const category = await Category.create({
     title,
     subtitle,
     alt,
@@ -122,7 +122,7 @@ export const createCategory = asyncHandler(async (req, res) => {
 });
 
 export const updateCategory = asyncHandler(async (req, res) => {
-  const category = await HomeCategory.findById(req.params.id);
+  const category = await Category.findById(req.params.id);
 
   if (!category) {
     throw new ApiError(404, "Category not found.");
@@ -130,7 +130,7 @@ export const updateCategory = asyncHandler(async (req, res) => {
 
   const previousTitle = category.title;
   const nextTitle = requireText(req.body.title, "Category name");
-  const duplicateCategory = await HomeCategory.findOne({ _id: { $ne: category._id }, title: nextTitle });
+  const duplicateCategory = await Category.findOne({ _id: { $ne: category._id }, title: nextTitle });
 
   if (duplicateCategory) {
     throw new ApiError(409, "A category with this name already exists.");
@@ -169,7 +169,7 @@ export const reorderCategories = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Category order is required.");
   }
 
-  const categories = await HomeCategory.find({ _id: { $in: categoryIds } }).select("_id");
+  const categories = await Category.find({ _id: { $in: categoryIds } }).select("_id");
 
   if (categories.length !== categoryIds.length) {
     throw new ApiError(400, "Some categories in the new order were not found.");
@@ -177,7 +177,7 @@ export const reorderCategories = asyncHandler(async (req, res) => {
 
   await Promise.all(
     categoryIds.map((categoryId, index) =>
-      HomeCategory.updateOne({ _id: categoryId }, { $set: { sortOrder: index } }),
+      Category.updateOne({ _id: categoryId }, { $set: { sortOrder: index } }),
     ),
   );
 
@@ -188,7 +188,7 @@ export const reorderCategories = asyncHandler(async (req, res) => {
 });
 
 export const deleteCategory = asyncHandler(async (req, res) => {
-  const category = await HomeCategory.findById(req.params.id);
+  const category = await Category.findById(req.params.id);
 
   if (!category) {
     throw new ApiError(404, "Category not found.");
@@ -201,11 +201,11 @@ export const deleteCategory = asyncHandler(async (req, res) => {
 
   await category.deleteOne();
 
-  const remainingCategories = await HomeCategory.find().sort({ sortOrder: 1, createdAt: 1 }).select("_id");
+  const remainingCategories = await Category.find().sort({ sortOrder: 1, createdAt: 1 }).select("_id");
 
   await Promise.all(
     remainingCategories.map((item, index) =>
-      HomeCategory.updateOne({ _id: item._id }, { $set: { sortOrder: index } }),
+      Category.updateOne({ _id: item._id }, { $set: { sortOrder: index } }),
     ),
   );
 

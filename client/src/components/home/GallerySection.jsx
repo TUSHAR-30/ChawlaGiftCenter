@@ -1,5 +1,4 @@
-export default function GallerySection({ galleryImages = [] }) {
-  galleryImages = [
+const galleryImages= [
     {
       image: "shop/inside3.webp",
       alt: "1",
@@ -17,6 +16,8 @@ export default function GallerySection({ galleryImages = [] }) {
       alt: "4",
     },
   ];
+
+export default function GallerySection() {
 
   return (
     <section className="relative mx-auto mt-16 max-w-7xl overflow-hidden rounded-[2rem] bg-[linear-gradient(135deg,rgba(254,251,235,0.92),rgba(255,255,255,0.98)_42%,rgba(239,246,255,0.9)_100%)] px-4 py-8 shadow-[0_28px_70px_-40px_rgba(31,41,55,0.3)] ring-1 ring-white/70 sm:px-6 sm:py-10 lg:px-8" id="gallery">

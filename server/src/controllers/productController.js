@@ -1,4 +1,4 @@
-import { HomeCategory } from "../models/HomeCategory.js";
+import { Category } from "../models/Category.js";
 import { Product } from "../models/Product.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -71,7 +71,7 @@ export const getTrendingProducts = asyncHandler(async (req, res) => {
 });
 
 export const getProductCategories = asyncHandler(async (req, res) => {
-  const categories = await HomeCategory.find().sort({ sortOrder: 1, title: 1 }).select("title");
+  const categories = await Category.find().sort({ sortOrder: 1, title: 1 }).select("title");
 
   res.status(200).json({
     success: true,

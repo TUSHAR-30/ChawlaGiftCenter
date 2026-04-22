@@ -30,8 +30,6 @@ function HomeSectionSkeleton() {
 export default function HomePage() {
   const [homeData, setHomeData] = useState({
     categories: [],
-    features: [],
-    gallery: [],
     trendingPreview: [],
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -74,8 +72,8 @@ export default function HomePage() {
       {isLoading ? <HomeSectionSkeleton /> : <CategoriesSection categories={homeData.categories} />}
       <ProductShowcaseSection />
       {isLoading ? <HomeSectionSkeleton /> : <TrendingSection products={homeData.trendingPreview} />}
-      {isLoading ? <HomeSectionSkeleton /> : <FeaturesSection features={homeData.features} />}
-      {isLoading ? <HomeSectionSkeleton /> : <GallerySection galleryImages={homeData.gallery} />}
+      {isLoading ? <HomeSectionSkeleton /> : <FeaturesSection  />}
+      {isLoading ? <HomeSectionSkeleton /> : <GallerySection  />}
       <LocationSection />
     </main>
   );
