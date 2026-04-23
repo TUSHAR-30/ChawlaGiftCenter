@@ -10,6 +10,17 @@ function ensureAuthConfig() {
   }
 }
 
+function getAdminCookieOptions() {
+  const isProduction = env.nodeEnv === "production";
+
+  return {
+    httpOnly: true,
+    sameSite: isProduction ? "none" : "lax",
+    secure: isProduction,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+  };
+}
+
 export function validateAdminCredentials(username, password) {
   ensureAuthConfig();
   return username === env.adminUsername && password === env.adminPassword;
@@ -28,18 +39,10 @@ export function verifyAdminToken(token) {
 }
 
 export function setAdminAuthCookie(res, token) {
-  res.cookie(ADMIN_AUTH_COOKIE, token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: env.nodeEnv === "production",
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie(ADMIN_AUTH_COOKIE, token, getAdminCookieOptions());
 }
 
 export function clearAdminAuthCookie(res) {
-  res.clearCookie(ADMIN_AUTH_COOKIE, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: env.nodeEnv === "production",
-  });
+  const { maxAge, ...cookieOptions } = getAdminCookieOptions();
+  res.clearCookie(ADMIN_AUTH_COOKIE, cookieOptions);
 }
