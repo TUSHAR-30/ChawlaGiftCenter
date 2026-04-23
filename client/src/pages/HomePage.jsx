@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { lazy, Suspense } from "react";
 import CategoriesSection from "../components/home/CategoriesSection";
 import FeaturesSection from "../components/home/FeaturesSection";
 import GallerySection from "../components/home/GallerySection";
@@ -53,39 +54,15 @@ function ShowcaseSkeleton() {
 }
 
 export default function HomePage() {
-  const [homeData, setHomeData] = useState({
-    categories: [],
-    trendingPreview: [],
+  const { data, isLoading } = useQuery({
+    queryKey: ["home"],
+    queryFn: async () => {
+      const response = await fetchJson("/home");
+      return response.data;
+    },
   });
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadHomeData() {
-      try {
-        const response = await fetchJson("/home");
-
-        if (!isMounted) {
-          return;
-        }
-
-        setHomeData(response.data);
-      } catch (error) {
-        console.error("Failed to load homepage data", error);
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    }
-
-    loadHomeData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const homeData = data || { categories: [], trendingPreview: [] };
 
   return (
     <main className="relative overflow-hidden bg-[linear-gradient(180deg,#fffdf6_0%,#fffaf0_18%,#f8fbff_56%,#fffef9_100%)] pt-16 pb-28 lg:pt-20 lg:pb-10">

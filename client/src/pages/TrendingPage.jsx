@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef } from "react";
 import ProductCard from "../components/products/ProductCard";
 import ProductCardSkeleton from "../components/products/ProductCardSkeleton";
 import { fetchJson } from "../utils/api";
@@ -7,67 +8,43 @@ const INITIAL_PRODUCTS = 7;
 const PRODUCT_BATCH = 4;
 
 export default function TrendingPage() {
-  const [products, setProducts] = useState([]);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    skip: 0,
-    hasMore: false,
-  });
-  const [isRefreshing, setIsRefreshing] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const loadMoreRef = useRef(null);
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadTrendingProducts() {
-      setIsRefreshing(true);
-      setErrorMessage("");
-
-      try {
-        const response = await fetchJson("/products/trending", {
-          query: {
-            page: 1,
-            limit: INITIAL_PRODUCTS,
-          },
-          signal: controller.signal,
-        });
-
-        setProducts(response.data);
-        setPagination(response.pagination);
-      } catch (error) {
-        if (error.name === "AbortError") {
-          return;
-        }
-
-        console.error("Failed to load trending products", error);
-        setProducts([]);
-        setPagination({ page: 1, skip: 0, hasMore: false });
-        setErrorMessage("Trending products could not be loaded right now. Please try again.");
-      } finally {
-        if (!controller.signal.aborted) {
-          setIsRefreshing(false);
-        }
+  const trendingQuery = useInfiniteQuery({
+    queryKey: ["trending-products"],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }) => {
+      const limit = pageParam === 0 ? INITIAL_PRODUCTS : PRODUCT_BATCH;
+      return fetchJson("/products/trending", {
+        query: {
+          skip: pageParam,
+          limit,
+        },
+      });
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.pagination?.hasMore) {
+        return undefined;
       }
-    }
 
-    loadTrendingProducts();
+      return allPages.reduce((total, page) => total + page.data.length, 0);
+    },
+  });
 
-    return () => {
-      controller.abort();
-    };
-  }, []);
+  const products = useMemo(
+    () => trendingQuery.data?.pages.flatMap((page) => page.data) || [],
+    [trendingQuery.data],
+  );
 
   useEffect(() => {
-    if (isRefreshing || isLoadingMore || !pagination.hasMore || !loadMoreRef.current) {
+    if (!loadMoreRef.current || !trendingQuery.hasNextPage || trendingQuery.isFetchingNextPage || trendingQuery.isLoading) {
       return undefined;
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsLoadingMore(true);
+          trendingQuery.fetchNextPage();
         }
       },
       { rootMargin: "240px 0px" },
@@ -76,48 +53,11 @@ export default function TrendingPage() {
     observer.observe(loadMoreRef.current);
 
     return () => observer.disconnect();
-  }, [isLoadingMore, isRefreshing, pagination.hasMore]);
-
-  useEffect(() => {
-    if (!isLoadingMore) {
-      return undefined;
-    }
-
-    const controller = new AbortController();
-
-    async function loadMoreTrendingProducts() {
-      try {
-        const response = await fetchJson("/products/trending", {
-          query: {
-            skip: products.length,
-            limit: PRODUCT_BATCH,
-          },
-          signal: controller.signal,
-        });
-
-        setProducts((currentProducts) => [...currentProducts, ...response.data]);
-        setPagination(response.pagination);
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          console.error("Failed to load more trending products", error);
-          setErrorMessage("More trending products could not be loaded right now.");
-        }
-      } finally {
-        if (!controller.signal.aborted) {
-          setIsLoadingMore(false);
-        }
-      }
-    }
-
-    loadMoreTrendingProducts();
-
-    return () => {
-      controller.abort();
-    };
-  }, [isLoadingMore, products.length]);
+  }, [trendingQuery]);
 
   const heroProducts = products.slice(0, 3);
   const moreProducts = products.slice(3);
+  const errorMessage = trendingQuery.isError ? "Trending products could not be loaded right now. Please try again." : "";
 
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,rgba(186,230,253,0.24),rgba(255,255,255,1)_28%,rgba(255,252,232,0.9)_100%)] pt-20 pb-32 lg:pt-24 lg:pb-16">
@@ -129,7 +69,7 @@ export default function TrendingPage() {
             </h1>
           </div>
 
-          {isRefreshing ? (
+          {trendingQuery.isLoading ? (
             <div className="rounded-[2rem] bg-white/70 p-4 shadow-[0_24px_48px_-30px_rgba(31,41,55,0.3)] backdrop-blur sm:p-5">
               <div className="grid gap-4 lg:grid-cols-3">
                 {Array.from({ length: 3 }).map((_, index) => (
@@ -149,20 +89,18 @@ export default function TrendingPage() {
             </div>
           ) : null}
 
-          {!isRefreshing && moreProducts.length > 0 ? (
+          {!trendingQuery.isLoading && moreProducts.length > 0 ? (
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {moreProducts.map((product) => (
                 <ProductCard key={product._id || product.title} product={product} />
               ))}
-              {isLoadingMore
-                ? Array.from({ length: PRODUCT_BATCH }).map((_, index) => (
-                    <ProductCardSkeleton key={`loading-${index}`} />
-                  ))
+              {trendingQuery.isFetchingNextPage
+                ? Array.from({ length: PRODUCT_BATCH }).map((_, index) => <ProductCardSkeleton key={`loading-${index}`} />)
                 : null}
             </div>
           ) : null}
 
-          {!isRefreshing && !errorMessage && products.length === 0 ? (
+          {!trendingQuery.isLoading && !errorMessage && products.length === 0 ? (
             <div className="mt-6 rounded-[1.5rem] bg-white p-8 text-center shadow-[0_16px_32px_-24px_rgba(31,41,55,0.28)]">
               <h2 className="font-headline text-2xl font-bold text-on-surface">No trending products found</h2>
               <p className="mt-2 text-sm font-medium text-on-surface-variant">
@@ -171,13 +109,13 @@ export default function TrendingPage() {
             </div>
           ) : null}
 
-          {!isRefreshing && errorMessage ? (
+          {!trendingQuery.isLoading && errorMessage ? (
             <div className="mt-6 rounded-[1.5rem] bg-white p-6 text-center shadow-[0_16px_32px_-24px_rgba(31,41,55,0.28)]">
               <p className="text-sm font-semibold text-on-surface-variant">{errorMessage}</p>
             </div>
           ) : null}
 
-          {!isRefreshing && pagination.hasMore ? (
+          {!trendingQuery.isLoading && trendingQuery.hasNextPage ? (
             <div ref={loadMoreRef} className="mt-6 flex justify-center">
               <div className="rounded-full bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-on-surface-variant shadow-[0_14px_28px_-22px_rgba(31,41,55,0.3)]">
                 Scroll to load more

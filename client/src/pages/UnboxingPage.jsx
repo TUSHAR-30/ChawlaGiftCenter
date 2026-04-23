@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MdSearch } from "react-icons/md";
 import { fetchJson } from "../utils/api";
 
@@ -41,15 +42,6 @@ function VideoCardSkeleton() {
 export default function UnboxingPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const [videos, setVideos] = useState([]);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    skip: 0,
-    hasMore: false,
-  });
-  const [isRefreshing, setIsRefreshing] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const loadMoreRef = useRef(null);
 
   useEffect(() => {
@@ -60,57 +52,42 @@ export default function UnboxingPage() {
     return () => window.clearTimeout(timeoutId);
   }, [searchTerm]);
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadVideos() {
-      setIsRefreshing(true);
-      setErrorMessage("");
-
-      try {
-        const response = await fetchJson("/unboxing", {
-          query: {
-            search: debouncedSearchTerm,
-            page: 1,
-            limit: INITIAL_VIDEOS,
-          },
-          signal: controller.signal,
-        });
-
-        setVideos(response.data);
-        setPagination(response.pagination);
-      } catch (error) {
-        if (error.name === "AbortError") {
-          return;
-        }
-
-        console.error("Failed to load unboxing videos", error);
-        setVideos([]);
-        setPagination({ page: 1, skip: 0, hasMore: false });
-        setErrorMessage("Unboxing videos could not be loaded right now. Please try again.");
-      } finally {
-        if (!controller.signal.aborted) {
-          setIsRefreshing(false);
-        }
+  const unboxingQuery = useInfiniteQuery({
+    queryKey: ["unboxing", debouncedSearchTerm],
+    initialPageParam: 0,
+    queryFn: async ({ pageParam }) => {
+      const limit = pageParam === 0 ? INITIAL_VIDEOS : VIDEO_BATCH;
+      return fetchJson("/unboxing", {
+        query: {
+          search: debouncedSearchTerm,
+          skip: pageParam,
+          limit,
+        },
+      });
+    },
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.pagination?.hasMore) {
+        return undefined;
       }
-    }
 
-    loadVideos();
+      return allPages.reduce((total, page) => total + page.data.length, 0);
+    },
+  });
 
-    return () => {
-      controller.abort();
-    };
-  }, [debouncedSearchTerm]);
+  const videos = useMemo(
+    () => unboxingQuery.data?.pages.flatMap((page) => page.data) || [],
+    [unboxingQuery.data],
+  );
 
   useEffect(() => {
-    if (isRefreshing || isLoadingMore || !pagination.hasMore || !loadMoreRef.current) {
+    if (!loadMoreRef.current || !unboxingQuery.hasNextPage || unboxingQuery.isFetchingNextPage || unboxingQuery.isLoading) {
       return undefined;
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsLoadingMore(true);
+          unboxingQuery.fetchNextPage();
         }
       },
       { rootMargin: "240px 0px" },
@@ -119,46 +96,9 @@ export default function UnboxingPage() {
     observer.observe(loadMoreRef.current);
 
     return () => observer.disconnect();
-  }, [isLoadingMore, isRefreshing, pagination.hasMore]);
+  }, [unboxingQuery]);
 
-  useEffect(() => {
-    if (!isLoadingMore) {
-      return undefined;
-    }
-
-    const controller = new AbortController();
-
-    async function loadMoreVideos() {
-      try {
-        const response = await fetchJson("/unboxing", {
-          query: {
-            search: debouncedSearchTerm,
-            skip: videos.length,
-            limit: VIDEO_BATCH,
-          },
-          signal: controller.signal,
-        });
-
-        setVideos((currentVideos) => [...currentVideos, ...response.data]);
-        setPagination(response.pagination);
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          console.error("Failed to load more unboxing videos", error);
-          setErrorMessage("More unboxing videos could not be loaded right now.");
-        }
-      } finally {
-        if (!controller.signal.aborted) {
-          setIsLoadingMore(false);
-        }
-      }
-    }
-
-    loadMoreVideos();
-
-    return () => {
-      controller.abort();
-    };
-  }, [debouncedSearchTerm, isLoadingMore, videos.length]);
+  const errorMessage = unboxingQuery.isError ? "Unboxing videos could not be loaded right now. Please try again." : "";
 
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,rgba(254,202,21,0.14),rgba(255,255,255,1)_24%,rgba(186,230,253,0.12)_100%)] pt-20 pb-32 lg:pt-24 lg:pb-16">
@@ -186,15 +126,15 @@ export default function UnboxingPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {isRefreshing
+            {unboxingQuery.isLoading
               ? Array.from({ length: INITIAL_VIDEOS }).map((_, index) => <VideoCardSkeleton key={index} />)
               : videos.map((video) => <VideoCard key={video._id || video.title} video={video} />)}
-            {!isRefreshing && isLoadingMore
+            {!unboxingQuery.isLoading && unboxingQuery.isFetchingNextPage
               ? Array.from({ length: VIDEO_BATCH }).map((_, index) => <VideoCardSkeleton key={`loading-${index}`} />)
               : null}
           </div>
 
-          {!isRefreshing && !errorMessage && videos.length === 0 ? (
+          {!unboxingQuery.isLoading && !errorMessage && videos.length === 0 ? (
             <div className="mt-6 rounded-[1.5rem] bg-white p-8 text-center shadow-[0_16px_32px_-24px_rgba(31,41,55,0.28)]">
               <h2 className="font-headline text-2xl font-bold text-on-surface">No unboxing videos found</h2>
               <p className="mt-2 text-sm font-medium text-on-surface-variant">
@@ -203,13 +143,13 @@ export default function UnboxingPage() {
             </div>
           ) : null}
 
-          {!isRefreshing && errorMessage ? (
+          {!unboxingQuery.isLoading && errorMessage ? (
             <div className="mt-6 rounded-[1.5rem] bg-white p-6 text-center shadow-[0_16px_32px_-24px_rgba(31,41,55,0.28)]">
               <p className="text-sm font-semibold text-on-surface-variant">{errorMessage}</p>
             </div>
           ) : null}
 
-          {!isRefreshing && pagination.hasMore ? (
+          {!unboxingQuery.isLoading && unboxingQuery.hasNextPage ? (
             <div ref={loadMoreRef} className="mt-6 flex justify-center">
               <div className="rounded-full bg-white/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-on-surface-variant shadow-[0_14px_28px_-22px_rgba(31,41,55,0.3)]">
                 Scroll to load more
