@@ -10,9 +10,13 @@ import apiRoutes from "./routes/index.js";
 
 const app = express();
 
+//  Split the clientUrl env string into an array
+const allowedOrigins = env.clientUrl ? env.clientUrl.split(',') : [];
+
 app.use(
   cors({
-    origin: env.clientUrl,
+    // Pass the array here
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
