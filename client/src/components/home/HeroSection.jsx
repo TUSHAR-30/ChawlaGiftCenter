@@ -54,11 +54,11 @@ export default function HeroSection() {
             {contactNumbers.map((number) => (
               <a
                 key={number}
-                className="flex min-w-[10.5rem] items-center justify-center gap-2 rounded-full border border-primary/15 bg-white/88 px-3 py-2.5 text-sm font-bold text-on-surface shadow-[0_14px_30px_-24px_rgba(31,41,55,0.35)] backdrop-blur-sm transition-transform duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary sm:min-w-[11.5rem] sm:px-4"
+                className="flex min-w-[10.5rem] items-center justify-center gap-2 whitespace-nowrap rounded-full border border-primary/15 bg-white/88 px-3 py-2.5 text-[13px] font-bold text-on-surface shadow-[0_14px_30px_-24px_rgba(31,41,55,0.35)] backdrop-blur-sm transition-transform duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary sm:min-w-[11.5rem] sm:px-4 sm:text-sm"
                 href={`tel:${number.replace(/\s+/g, "")}`}
               >
                 <MdPhone className="text-base text-primary" />
-                {number}
+                <span className="whitespace-nowrap">{number}</span>
               </a>
             ))}
           </div>
@@ -79,3 +79,5 @@ export default function HeroSection() {
     </section>
   );
 }
+
+
