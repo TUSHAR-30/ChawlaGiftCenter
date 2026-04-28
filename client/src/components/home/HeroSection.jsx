@@ -1,6 +1,7 @@
-import { MdArrowForward, MdAutoAwesome, MdCelebration, MdShoppingBag, MdStar, MdStars } from "react-icons/md";
+import { MdArrowForward, MdAutoAwesome, MdCelebration, MdPhone, MdShoppingBag, MdStar, MdStars } from "react-icons/md";
 
 const googleMapsUrl = "https://www.google.com/maps/place/Chawla+Gift+Centre/@28.7957068,76.1291585,680m/data=!3m2!1e3!4b1!4m6!3m5!1s0x39126735010a1ead:0x293c38a45347a826!8m2!3d28.7957068!4d76.1291585!16s%2Fg%2F11r_k68lgf!5m1!1e1?entry=ttu&g_ep=EgoyMDI2MDQxOS4wIKXMDSoASAFQAw%3D%3D";
+const contactNumbers = ["+91 XXXXX XXXXX", "+91 XXXXX XXXXX"];
 
 export default function HeroSection() {
   return (
@@ -49,6 +50,18 @@ export default function HeroSection() {
           <p className="motion-rise motion-rise-delay-2 mx-auto mb-8 max-w-xs text-base font-medium text-on-surface-variant sm:max-w-lg sm:text-lg lg:mx-0 lg:mb-10 lg:text-xl">
             Bhiwani's favourite gift shop for family, friends, children, and every celebration.
           </p>
+          <div className="motion-rise motion-rise-delay-2 mb-8 flex flex-wrap items-center justify-center gap-3 sm:mb-10 lg:justify-start">
+            {contactNumbers.map((number) => (
+              <a
+                key={number}
+                className="flex min-w-[10.5rem] items-center justify-center gap-2 rounded-full border border-primary/15 bg-white/88 px-3 py-2.5 text-sm font-bold text-on-surface shadow-[0_14px_30px_-24px_rgba(31,41,55,0.35)] backdrop-blur-sm transition-transform duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:text-primary sm:min-w-[11.5rem] sm:px-4"
+                href={`tel:${number.replace(/\s+/g, "")}`}
+              >
+                <MdPhone className="text-base text-primary" />
+                {number}
+              </a>
+            ))}
+          </div>
           <div className="motion-rise motion-rise-delay-3 flex justify-center lg:justify-start">
             <a
               className="vibrant-shadow group flex items-center gap-3 rounded-2xl bg-primary px-7 py-4 text-base font-black text-on-primary transition-all hover:scale-105 hover:shadow-[0_24px_48px_-24px_rgba(234,179,8,0.55)] active:scale-95 sm:px-10 sm:py-5 sm:text-lg"

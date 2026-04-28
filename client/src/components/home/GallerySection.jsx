@@ -1,18 +1,18 @@
 const galleryImages= [
     {
-      image: "shop/inside3.webp",
+      image: "shop/inside1.webp",
       alt: "1",
     },
     {
-      image: "shop/inside4.jpg",
+      image: "shop/inside2.jpg",
       alt: "2",
     },
     {
-      image: "shop/inside5.jpg",
+      image: "shop/inside3.jpg",
       alt: "3",
     },
     {
-      image: "shop/inside6.jpg",
+      image: "shop/inside4.jpg",
       alt: "4",
     },
   ];
