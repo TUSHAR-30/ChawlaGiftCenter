@@ -13,10 +13,10 @@ export default function LocationSection() {
 
       <div className="relative overflow-hidden rounded-[2rem] bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(254,252,232,0.92)_52%,rgba(239,246,255,0.82)_100%)] shadow-[0_28px_70px_-42px_rgba(31,41,55,0.36)] ring-1 ring-white/70 lg:grid lg:grid-cols-[1.1fr_0.9fr]">
         <div className="group relative h-56 sm:h-72 lg:h-full lg:min-h-[24rem]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_42%)]" />
+          <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.14),transparent_42%)]" />
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2959.2337235462915!2d76.1291585!3d28.795706799999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39126735010a1ead%3A0x293c38a45347a826!2sChawla%20Gift%20Centre!5e1!3m2!1sen!2sin!4v1776452916342!5m2!1sen!2sin"
-            className="h-full w-full object-cover opacity-85 transition-opacity group-hover:opacity-100"
+            className="relative z-0 h-full w-full object-cover opacity-85 transition-opacity group-hover:opacity-100"
             style={{ border: 0 }}
             allowFullScreen=""
             loading="lazy"
