@@ -1,7 +1,7 @@
 import { MdArrowForward, MdAutoAwesome, MdCelebration, MdPhone, MdShoppingBag, MdStar, MdStars } from "react-icons/md";
 
 const googleMapsUrl = "https://www.google.com/maps/place/Chawla+Gift+Centre/@28.7957068,76.1291585,680m/data=!3m2!1e3!4b1!4m6!3m5!1s0x39126735010a1ead:0x293c38a45347a826!8m2!3d28.7957068!4d76.1291585!16s%2Fg%2F11r_k68lgf!5m1!1e1?entry=ttu&g_ep=EgoyMDI2MDQxOS4wIKXMDSoASAFQAw%3D%3D";
-const contactNumbers = ["+91 XXXXX XXXXX", "+91 XXXXX XXXXX"];
+const contactNumbers = ["+91 94660 74466", "+91 94663 81494"];
 
 export default function HeroSection() {
   return (
