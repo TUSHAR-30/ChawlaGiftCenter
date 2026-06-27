@@ -69,6 +69,7 @@ body {
   font-family: var(--font-body);
   background-color: var(--color-background);
   color: var(--color-on-surface);
+  overflow-x: hidden;
 }
 
 h1,
@@ -77,7 +78,7 @@ h3,
 h4 {
   font-family: var(--font-headline);
 }
-`n.joy-shadow {
+.joy-shadow {
   box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.1), 0 8px 16px -8px rgba(0, 0, 0, 0.05);
 }
 

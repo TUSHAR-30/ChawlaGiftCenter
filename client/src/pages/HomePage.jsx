@@ -6,10 +6,14 @@ import GallerySection from "../components/home/GallerySection";
 import HeroSection from "../components/home/HeroSection";
 import LocationSection from "../components/home/LocationSection";
 import TrendingSection from "../components/home/TrendingSection";
+import BubbleCreative from "../components/creatives/BubbleCreative";
+import PenCreative from "../components/creatives/PenCreative";
 import ProductCardSkeleton from "../components/products/ProductCardSkeleton";
 import { fetchJson } from "../utils/api";
 
 const ProductShowcaseSection = lazy(() => import("../components/home/ProductShowcaseSection"));
+const RingsCreative = lazy(() => import("../components/creatives/RingsCreative"));
+const PuzzleCreative = lazy(() => import("../components/creatives/PuzzleCreative"));
 
 function HomeSectionSkeleton() {
   return (
@@ -65,20 +69,30 @@ export default function HomePage() {
   const homeData = data || { categories: [], trendingPreview: [] };
 
   return (
-    <main className="relative overflow-hidden bg-[linear-gradient(180deg,#fffdf6_0%,#fffaf0_18%,#f8fbff_56%,#fffef9_100%)] pt-16 pb-28 lg:pt-20 lg:pb-10">
+    <main className="relative bg-[linear-gradient(180deg,#fffdf6_0%,#fffaf0_18%,#f8fbff_56%,#fffef9_100%)] pt-16 pb-28 lg:pt-20 lg:pb-10">
       <div className="soft-shapes left-[-4rem] top-32 h-64 w-64 rounded-full bg-primary-container/55" />
       <div className="soft-shapes right-[-5rem] top-[30rem] h-72 w-72 rounded-full bg-secondary-container/45" />
       <div className="soft-shapes bottom-24 left-1/3 h-56 w-56 rounded-full bg-tertiary-container/35" />
 
       <HeroSection />
       {isLoading ? <HomeSectionSkeleton /> : <CategoriesSection categories={homeData.categories} />}
-      <Suspense fallback={<ShowcaseSkeleton />}>
-        <ProductShowcaseSection />
-      </Suspense>
+      {/* <Suspense fallback={null}> */}
+        <RingsCreative />
+      {/* </Suspense> */}
+      {/* <Suspense fallback={<ShowcaseSkeleton />}> */}
+        {/* <ProductShowcaseSection /> */}
+      {/* </Suspense> */}
       {isLoading ? <HomeSectionSkeleton /> : <TrendingSection products={homeData.trendingPreview} />}
+      <Suspense fallback={null}>
+        <BubbleCreative />
+      </Suspense>
       {isLoading ? <HomeSectionSkeleton /> : <FeaturesSection />}
       {isLoading ? <HomeSectionSkeleton /> : <GallerySection />}
+      <Suspense fallback={null}>
+        <PuzzleCreative />
+      </Suspense>
       <LocationSection />
+      <PenCreative />
     </main>
   );
 }
