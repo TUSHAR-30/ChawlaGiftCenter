@@ -88,9 +88,9 @@ export default function HomePage() {
       </Suspense>
       {isLoading ? <HomeSectionSkeleton /> : <FeaturesSection />}
       {isLoading ? <HomeSectionSkeleton /> : <GallerySection />}
-      <Suspense fallback={null}>
+      {/* <Suspense fallback={null}>
         <PuzzleCreative />
-      </Suspense>
+      </Suspense> */}
       <LocationSection />
       <PenCreative />
     </main>
