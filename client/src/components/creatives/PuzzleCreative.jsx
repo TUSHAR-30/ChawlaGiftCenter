@@ -19,6 +19,7 @@ const PUZZLE_STYLES = `
 
   .puzzle-creative-scroll-container {
     height: 400vh;
+    overflow-x: clip
   }
 
   .puzzle-creative-sticky {

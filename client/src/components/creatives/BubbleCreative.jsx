@@ -5,6 +5,7 @@ const BUBBLE_STYLES = `
     position: relative;
     height: 250vh;
     background: linear-gradient(to bottom, #0b0f19, #111827, #0b0f19);
+    overflow-x: clip
   }
 
   .bubble-creative-sticky {

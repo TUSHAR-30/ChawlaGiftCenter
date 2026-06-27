@@ -5,6 +5,7 @@ const PEN_STYLES = `
     position: relative;
     height: 400vh;
     background: radial-gradient(circle, #fdfbfa 0%, #f7f3e9 100%);
+    overflow-x: clip
   }
 
   .pen-creative-sticky {
